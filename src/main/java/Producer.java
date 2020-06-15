@@ -33,8 +33,6 @@ public class Producer {
                 } else {
                     logger.info("send success: %+v", metadata);
                 }
-                System.out.println(metadata);
-                System.out.println(exception);
             });
         }
         System.out.println("finish");
