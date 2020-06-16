@@ -9,7 +9,6 @@ import java.util.Scanner;
 public class Producer {
     private static final String brokerList = "localhost:9092";
     private static final String topic = "wenyue-demo";
-    private static Logger logger = LoggerFactory.getLogger(Producer.class);
 
     private static Properties initConfig() {
         Properties props = new Properties();
@@ -24,14 +23,16 @@ public class Producer {
         KafkaProducer<String, String> producer = new KafkaProducer<String, String>(props);
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
-            String input = scanner.nextLine();
-            System.out.println(input);
+            String input = scanner.nextLine().trim();
+            if (input.length() == 0) {
+                break;
+            }
             ProducerRecord<String, String> record = new ProducerRecord<>(topic, input);
             producer.send(record, (metadata, exception) -> {
-                if (exception == null) {
-                    logger.error("send failed, err: %+v", exception);
+                if (exception != null) {
+                    exception.printStackTrace();
                 } else {
-                    logger.info("send success: %+v", metadata);
+                    System.out.println(metadata);
                 }
             });
         }
